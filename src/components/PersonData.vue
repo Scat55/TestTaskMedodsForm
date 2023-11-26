@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import useVuelidate from '@vuelidate/core';
 import { maxLength, minLength, required, helpers, numeric } from '@vuelidate/validators'
 import Input from '@/components/Input.vue'
@@ -8,9 +8,10 @@ import Input from '@/components/Input.vue'
 const nameField = ref('')
 const lastNameField = ref('')
 const birthdayFiled = ref('')
-const numberFiled = ref(7)
+const numberFiled = ref('7')
 const patronymicField = ref('')
 const genderField = ref('Пол')
+const typePersonField = ref([])
 
 const rules = computed(() => ({
   lastNameField: {
@@ -28,8 +29,11 @@ const rules = computed(() => ({
     maxLength: helpers.withMessage(`Максимальная длинна 11 символов`, maxLength(11)),
     minLength: helpers.withMessage(`Минимальная длинна 11 символов`, minLength(11)),
   },
+  typePersonField: {
+    required: helpers.withMessage(`Обязательное поле`, required)
+  }
 }))
-const v = useVuelidate(rules, { nameField, lastNameField, birthdayFiled, numberFiled, patronymicField })
+const v = useVuelidate(rules, { nameField, lastNameField, birthdayFiled, numberFiled, patronymicField, typePersonField })
 
 
 const handler = () => {
@@ -38,7 +42,7 @@ const handler = () => {
   if (v.value.$error) return
 
   alert('Успешно')
-  console.log(nameField.value, lastNameField.value, patronymicField.value, birthdayFiled.value, numberFiled.value, genderField.value)
+  console.log(nameField.value, lastNameField.value, patronymicField.value, birthdayFiled.value, numberFiled.value, genderField.value, typePersonField.value)
 
 }
 
@@ -93,7 +97,6 @@ const handler = () => {
         name="gender"
         class="select"
         v-model="genderField"
-        @click="test"
       >
         <option
           value="Пол"
@@ -103,6 +106,32 @@ const handler = () => {
         <option value="Женский">Женский</option>
       </select>
 
+      <div>
+        <label
+          for="typeUser"
+          class="label"
+        >Группа клиентов*</label>
+        <select
+          name="typeUser"
+          class="selec__type"
+          multiple
+          v-model="v.typePersonField.$model"
+          :error="v.typePersonField.$errors"
+        >
+          <option value="VIP">VIP</option>
+          <option value="ОМС">ОМС</option>
+          <option value="Проблемные">Проблемные</option>
+        </select>
+        <TransitionGroup>
+          <div
+            class="form-error"
+            v-for="element of v.typePersonField.$errors "
+            :key="element.$uid"
+          >
+            <div class="form-error__message">{{ element.$message }}</div>
+          </div>
+        </TransitionGroup>
+      </div>
       <button
         class="btn"
         type="submit"
@@ -132,6 +161,7 @@ const handler = () => {
   align-self: flex-start
 
 .btn
+  display: block
   justify-self: flex-end
   align-self: flex-end
   background-color: var(--primary)
@@ -145,4 +175,37 @@ const handler = () => {
 
   &:hover
     background-color: lighten(#6979f8, 3% )
+
+.selec__type
+  display: block
+  border: 1px solid var(--primary)
+  padding: .625rem 0.625rem
+  height: 5rem
+  border-radius: 0.4375rem
+  font-size: 0.9375rem
+  width: 18.75rem
+  align-self: flex-start
+
+.form-error 
+  display: block
+  background: var(--danger)
+  margin-top: .25rem
+  border-radius: .4375rem
+  font-size: .8125rem
+  color: #fff
+  padding: .3125rem
+
+.label
+  font-weight: bold
+  display: block
+  font-size: .8125rem
+  color: var(--primary)
+.v-enter-active,
+.v-leave-active 
+  transition: opacity 0.5s ease
+
+.v-enter-from,
+.v-leave-to 
+  opacity: 0
+
 </style>
