@@ -1,37 +1,90 @@
 <script setup>
 import { ref, computed } from 'vue'
 import useVuelidate from '@vuelidate/core';
-import { minLength, email, helpers } from '@vuelidate/validators'
+import { maxLength, required, helpers, numeric } from '@vuelidate/validators'
 import Input from '@/components/Input.vue'
 
 
-const emailField = ref('')
+const nameField = ref('')
+const lastNameField = ref('')
+const birthdayFiled = ref('')
+const numberFiled = ref(7)
+const patronymicField = ref('')
 
 const rules = computed(() => ({
-  emailField: {
-    email: helpers.withMessage(`Неккоректный email`, email)
-  }
+  lastNameField: {
+    required: helpers.withMessage(`Обязательное поле`, required)
+  },
+  nameField: {
+    required: helpers.withMessage(`Обязательное поле`, required)
+  },
+  birthdayFiled: {
+    required: helpers.withMessage(`Обязательное поле`, required)
+  },
+  numberFiled: {
+    required: helpers.withMessage(`Обязательное поле`, required),
+    numeric: helpers.withMessage(`Вы можете вводить только цифры`, numeric),
+    maxLength: helpers.withMessage(`Максимальная длинна 11 символов`, maxLength(11)),
+  },
 }))
-const v = useVuelidate(rules, { emailField })
-console.log(v)
+const v = useVuelidate(rules, { nameField, lastNameField, birthdayFiled, numberFiled, patronymicField })
+
 </script>
 <template>
-  <form>
-    <Input
-      type="email"
-      label="Ваша почта"
-      name="Email"
-      placeholder="Введите ваш email"
-      v-model:value="v.emailField.$model"
-      :error="v.emailField.$errors"
-    />
-  </form>
+  <div class="container">
+    <form class="form">
+      <Input
+        type="text"
+        label="Ваше имя*"
+        name="name"
+        placeholder="Введите ваше имя"
+        v-model:value="v.nameField.$model"
+        :error="v.nameField.$errors"
+      />
+      <Input
+        type="text"
+        label="Ваша фамилия*"
+        name="lastname"
+        placeholder="Введите вашу фамилию"
+        v-model:value="v.lastNameField.$model"
+        :error="v.lastNameField.$errors"
+      />
+      <Input
+        type="text"
+        label="Ваш отчество"
+        name="patronymic"
+        placeholder="Введите ваше отчество"
+        v-model:value="patronymicField"
+      />
+      <Input
+        type="date"
+        label="Дата рождения"
+        name="Email"
+        placeholder="Введите вашу дату рождения"
+        v-model:value="v.birthdayFiled.$model"
+        :error="v.birthdayFiled.$errors"
+      />
+      <Input
+        type="number"
+        label="Ваша номер телефона"
+        name="number"
+        placeholder="Введите ваш номер телофона"
+        v-model:value="v.numberFiled.$model"
+        :error="v.numberFiled.$errors"
+      />
+
+    </form>
+  </div>
 </template>
 
 
 
 <style lang="sass" scoped>
-form
+.form
+  display: flex
+  gap: 1rem
+  align-items: center
+  flex-wrap: wrap
   margin-top: 2rem
   margin-left: 1rem
 </style>
