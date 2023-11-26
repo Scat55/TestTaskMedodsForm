@@ -10,6 +10,7 @@ const lastNameField = ref('')
 const birthdayFiled = ref('')
 const numberFiled = ref(7)
 const patronymicField = ref('')
+const genderField = ref('Пол')
 
 const rules = computed(() => ({
   lastNameField: {
@@ -30,10 +31,24 @@ const rules = computed(() => ({
 }))
 const v = useVuelidate(rules, { nameField, lastNameField, birthdayFiled, numberFiled, patronymicField })
 
+
+const handler = () => {
+  v.value.$touch() // Проверка на ошибки
+
+  if (v.value.$error) return
+
+  alert('Успешно')
+  console.log(nameField.value, lastNameField.value, patronymicField.value, birthdayFiled.value, numberFiled.value, genderField.value)
+
+}
+
 </script>
 <template>
   <div class="container">
-    <form class="form">
+    <form
+      class="form"
+      @submit.prevent="handler"
+    >
       <Input
         type="text"
         label="Ваше имя*"
@@ -74,6 +89,24 @@ const v = useVuelidate(rules, { nameField, lastNameField, birthdayFiled, numberF
         :error="v.numberFiled.$errors"
       />
 
+      <select
+        name="gender"
+        class="select"
+        v-model="genderField"
+        @click="test"
+      >
+        <option
+          value="Пол"
+          disabled
+        >Ваш пол</option>
+        <option value="Мужской">Мужской</option>
+        <option value="Женский">Женский</option>
+      </select>
+
+      <button
+        class="btn"
+        type="submit"
+      >Далее</button>
     </form>
   </div>
 </template>
@@ -88,4 +121,28 @@ const v = useVuelidate(rules, { nameField, lastNameField, birthdayFiled, numberF
   flex-wrap: wrap
   margin-top: 2rem
   margin-left: 1rem
+
+.select
+  border: 1px solid var(--primary)
+  padding: 0 0.625rem
+  height: 2.5rem
+  border-radius: 0.4375rem
+  font-size: 0.9375rem
+  width: 18.75rem
+  align-self: flex-start
+
+.btn
+  justify-self: flex-end
+  align-self: flex-end
+  background-color: var(--primary)
+  color: #fff
+  padding: .625rem 1.25rem
+  border-radius: 0.5rem
+  border: none
+  outline: none
+  cursor: pointer
+  transition: all .3s
+
+  &:hover
+    background-color: lighten(#6979f8, 3% )
 </style>
