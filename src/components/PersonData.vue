@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import useVuelidate from '@vuelidate/core';
-import { maxLength, required, helpers, numeric } from '@vuelidate/validators'
+import { maxLength, minLength, required, helpers, numeric } from '@vuelidate/validators'
 import Input from '@/components/Input.vue'
 
 
@@ -25,6 +25,7 @@ const rules = computed(() => ({
     required: helpers.withMessage(`Обязательное поле`, required),
     numeric: helpers.withMessage(`Вы можете вводить только цифры`, numeric),
     maxLength: helpers.withMessage(`Максимальная длинна 11 символов`, maxLength(11)),
+    minLength: helpers.withMessage(`Минимальная длинна 11 символов`, minLength(11)),
   },
 }))
 const v = useVuelidate(rules, { nameField, lastNameField, birthdayFiled, numberFiled, patronymicField })
@@ -58,7 +59,7 @@ const v = useVuelidate(rules, { nameField, lastNameField, birthdayFiled, numberF
       />
       <Input
         type="date"
-        label="Дата рождения"
+        label="Дата рождения*"
         name="Email"
         placeholder="Введите вашу дату рождения"
         v-model:value="v.birthdayFiled.$model"
@@ -66,7 +67,7 @@ const v = useVuelidate(rules, { nameField, lastNameField, birthdayFiled, numberF
       />
       <Input
         type="number"
-        label="Ваша номер телефона"
+        label="Ваша номер телефона*"
         name="number"
         placeholder="Введите ваш номер телофона"
         v-model:value="v.numberFiled.$model"
