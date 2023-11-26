@@ -52,7 +52,7 @@ const v = useVuelidate(rules, { nameField, lastNameField, birthdayFiled, numberF
       />
       <Input
         type="text"
-        label="Ваш отчество"
+        label="Ваше отчество"
         name="patronymic"
         placeholder="Введите ваше отчество"
         v-model:value="patronymicField"
@@ -67,7 +67,7 @@ const v = useVuelidate(rules, { nameField, lastNameField, birthdayFiled, numberF
       />
       <Input
         type="number"
-        label="Ваша номер телефона*"
+        label="Ваш номер телефона*"
         name="number"
         placeholder="Введите ваш номер телофона"
         v-model:value="v.numberFiled.$model"
