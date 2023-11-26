@@ -5,11 +5,9 @@ import PersonData from './components/PersonData.vue';
 
 <template>
   <main>
-    <form>
-      <PersonData
 
-      />
-    </form>
+    <PersonData />
+
   </main>
 </template>
 
